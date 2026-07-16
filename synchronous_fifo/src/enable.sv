@@ -1,4 +1,4 @@
-module tracker(
+module enable(
     input  logic clk,
     input  logic reset,
     input  logic WE2,
@@ -7,10 +7,10 @@ module tracker(
 );
     always_ff @(posedge clk, posedge reset) begin
         if (reset)
-            WriteLastOut <= '0;
+            WriteLast <= '0;
         else if (WE2 && !RE1)
-            WriteLastOut <= '1;
+            WriteLast <= '1;
         else if (RE1 && !WE2)
-            WriteLastOut <= '0;
+            WriteLast <= '0;
     end
 endmodule
