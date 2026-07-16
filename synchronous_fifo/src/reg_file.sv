@@ -1,26 +1,25 @@
 module reg_file(
     input  logic        clk,
-    input  logic        reset,
-    input  logic [4:0]  wr_addr,
-    input  logic [31:0] wr_data,
-    input  logic        wr_en,
-    input  logic [4:0]  rd_addr,
-    input  logic        rd_en,
-    output logic [31:0] rd_data
+    input  logic [5:0]  A1,
+    input  logic [5:0]  A2,
+    input  logic        WE2,
+    input  logic [31:0] WD2,
+    input  logic        RE1,
+    output logic [31:0] RD1
 );
-    logic [31:0] reg_type [31:0];
+    logic [31:0] reg_type [63:0];
 
-    always_ff @(posedge clk, posedge reset) 
+    always_ff @(posedge clk) 
     begin
-        if (reset)
-            rd_data <= 32'b0;
-        else 
-        begin
-            if (rd_en)
-                rd_data <= reg_type[rd_addr];
+        if (WE2)
+            reg_type[A2] <= WD2;
 
-            if (wr_en)
-                reg_type[wr_addr] <= wr_data;
-        end
+    end
+
+    always_comb begin
+        if (RE1)
+            RD1 = reg_type[A1];
+        else
+            RD1 = '0;
     end
 endmodule

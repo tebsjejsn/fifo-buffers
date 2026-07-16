@@ -1,6 +1,6 @@
 module comparator
 #(
-    parameter width = 6
+    parameter width=6
 ) (
     input  logic [width-1:0] A1,
     input  logic [width-1:0] A2,
