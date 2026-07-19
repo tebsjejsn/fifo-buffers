@@ -88,7 +88,7 @@ module tb();
 
     // Setup and reset
     initial begin
-        trace_file = $fopen("C:/Users/tejpa/sync_fifo/data/wr_data.txt", "r");
+        trace_file = $fopen("data/wr_data.txt", "r");
         if (trace_file == 0) begin
             $display("\n[%0t] ERROR: Could not open trace file", $time);
             $stop;
