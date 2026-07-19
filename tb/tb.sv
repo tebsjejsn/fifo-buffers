@@ -6,14 +6,14 @@ module tb();
     parameter ADDR_WIDTH = 6;
 
     // Variables for top-level DUT
-    logic clk;
-    logic reset;
-    logic WR;
-    logic RD;
-    logic Wd2;
-    logic RD1Out;
-    logic F;
-    logic E;
+    logic        clk;
+    logic        reset;
+    logic        WR;
+    logic        RD;
+    logic [31:0] WD2;
+    logic [31:0] RD1Out;
+    logic        F;
+    logic        E;
 
     // Variables to track program execution
     integer                trace_file;
@@ -23,7 +23,7 @@ module tb();
     logic [DATA_WIDTH-1:0] WriteVal;
     integer                instr_count = 0;
 
-    logic [ADDR_WIDTH:0] queue [$];
+    logic [DATA_WIDTH-1:0] queue [$];
 
     // Initialize top-level module
     top dut (
@@ -42,11 +42,13 @@ module tb();
             queue.push_back(d);
         else
             $display("\n[%0t] WARNING: WRITING TO FULL QUEUE", $time);
-    
-        @(posedge clk)
+
         WR = 1;
         WD2 = d;
+    
         @(posedge clk)
+        #1;
+
         WR = 0;
     endtask
 
@@ -56,21 +58,24 @@ module tb();
         else
             $display("\n[%0t] WARNING: READING FROM EMPTY QUEUE", $time);
 
-        @(posedge clk)
         RD = 1;
+        
         @(posedge clk)
+        #1;
+
         RD = 0;
         ReadOut = RD1Out;
 
-        if (ReadOut !== ExpectedRead)
+        if (ReadOut !== ExpectedRead) begin
             $display("\n[%0t] ERROR: Expected %h, received %h", $time, ExpectedRead, ReadOut);
-            $stop;
+            $stop;\
+        end
         else
             $display("[%0t] PASS: Passed %h to the output", $time, ExpectedRead);
     endtask
 
     task readLine();
-        scan_result = $fscanf(trace_file, %h, WriteVal);
+        scan_result = $fscanf(trace_file, "%h", WriteVal);
     endtask
 
     // Generate clock
@@ -96,6 +101,9 @@ module tb();
 
     initial begin
         $display("\n[%0t] Starting FIFO Directed Tests... ", $time);
+
+        wait(reset == 0);
+        @(posedge clk);
 
         // TEST 1: Basic read and write
         $display("\n-----TEST 1: Basic read and write-----");
@@ -150,7 +158,7 @@ module tb();
 
         @(posedge clk)
         WR = 1;
-        readLine;
+        readLine();
         WD2 = WriteVal;
         RD = 1;
 
