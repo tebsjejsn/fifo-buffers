@@ -2,7 +2,7 @@
 
 A synchronous FIFO buffer implemented in SystemVerilog with a depth of 64 and a width of 32 bits. Write data is captured one clock cycle after `WR` is asserted and read data becomes valid two clock cycles after `RD` is asserted. The design includes overflow and underflow protection, and correctly handles simultaneous read and write operations.
 
-## Diagram
+## Datapath Diagram
 ![Synchronous FIFO Diagram](images/sync_fifo.jpeg)
 
 ## Project Structure
