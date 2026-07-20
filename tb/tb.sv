@@ -3,7 +3,6 @@
 module tb();
     // Common values for bit and address length
     parameter DATA_WIDTH = 32;
-    parameter ADDR_WIDTH = 6;
 
     // Variables for top-level DUT
     logic        clk;

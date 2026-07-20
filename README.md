@@ -9,7 +9,7 @@ A synchronous FIFO buffer implemented in SystemVerilog with a depth of 64 and a 
 ```
 sync-fifo/
 
-├── data/         # Numeric inputs
+├── data/         # Numeric input data
 
 ├── images/       # FIFO diagram
 
