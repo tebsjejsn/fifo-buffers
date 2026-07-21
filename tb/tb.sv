@@ -52,10 +52,16 @@ module tb();
     endtask
 
     task read();
-        if (!E)
+        logic ValidRead;
+
+        if (!E) begin
             ExpectedRead = queue.pop_front();
-        else
+            ValidRead = 1;
+        end
+        else begin
             $display("\n[%0t] WARNING: READING FROM EMPTY QUEUE", $time);
+            ValidRead = 0;
+        end
 
         RD = 1;
         
@@ -65,12 +71,13 @@ module tb();
         RD = 0;
         ReadOut = RD1Out;
 
-        if (ReadOut !== ExpectedRead) begin
-            $display("\n[%0t] ERROR: Expected %h, received %h", $time, ExpectedRead, ReadOut);
-            $stop;\
-        end
-        else
-            $display("[%0t] PASS: Passed %h to the output", $time, ExpectedRead);
+        if (ValidRead)
+            if (ReadOut !== ExpectedRead) begin
+                $display("\n[%0t] ERROR: Expected %h, received %h", $time, ExpectedRead, ReadOut);
+                $stop;
+            end
+            else
+                $display("[%0t] PASS: Passed %h to the output", $time, ExpectedRead);
     endtask
 
     task readLine();
@@ -165,6 +172,7 @@ module tb();
         ExpectedRead = queue.pop_front();
 
         @(posedge clk)
+        #1;
         WR = 0;
         RD = 0;
 
@@ -174,7 +182,7 @@ module tb();
         end
 
         // Successful execution of all tests
-        $display("\n\nSUCCESS: ALL TESTS PASSED");
+        $display("\n\nSUCCESS: ALL TESTS PASSED\n");
         $finish;
     end
 endmodule
