@@ -24,3 +24,5 @@ modelsim.ini
 # Temporary and lock files
 *.lock
 *~
+
+*.steps
